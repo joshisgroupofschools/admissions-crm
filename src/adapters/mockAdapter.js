@@ -1,4 +1,4 @@
-import {makeInitialData,groupFor,normalizeBoard,WALK_IN_OUTCOMES,isAdmissionStage} from '../data.js'
+import {makeInitialData,groupFor,normalizeBoard,WALK_IN_OUTCOMES,HEARD_SOURCES,isAdmissionStage} from '../data.js'
 import {syncCapacityAdmissions} from '../capacityData.js'
 
 const KEY='joshi-admissions-crm-v1'
@@ -10,6 +10,7 @@ export function normalizeSavedData(saved={}){
   const data={...defaults,...saved}
   for(const key of ['families','students','walkIns','walkInMappings','followUps','admissions','retention','retentionHistory','promotionHistory'])data[key]=Array.isArray(data[key])?data[key].filter(isRecord):[]
   data.settings={...defaults.settings,...(data.settings||{})}
+  data.settings.heardSources=Array.isArray(data.settings.heardSources)?data.settings.heardSources.filter(value=>typeof value==='string'&&value.trim()):[...HEARD_SOURCES]
   const savedCapacity=data.capacityPlan&&typeof data.capacityPlan==='object'?data.capacityPlan:{}
   data.capacityPlan=Object.fromEntries(Object.entries(defaults.capacityPlan).map(([group,rows])=>[group,Object.fromEntries(Object.entries(rows).map(([grade,row])=>[grade,{...row,...(savedCapacity[group]?.[grade]||{})}]))]))
   data.capacityRemarks=data.capacityRemarks&&typeof data.capacityRemarks==='object'?data.capacityRemarks:{}

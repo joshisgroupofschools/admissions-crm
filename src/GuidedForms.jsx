@@ -1,7 +1,7 @@
 import {useState} from 'react'
 import {BOARDS,CLASSES,SOURCES,HEARD_SOURCES,localDateISO} from './data'
 import {classLabel} from './helpers'
-export function EnquiryWizard({form,setForm,save,close}){
+export function EnquiryWizard({form,setForm,save,close,heardSources=HEARD_SOURCES}){
  const children=form.children
  const boardsFor=grade=>grade&&['PG','Nursery','LKG','UKG','E.Jr','E.Sr'].includes(grade)?BOARDS.filter(board=>board!=='CBSE'):BOARDS.filter(board=>board!=='EuroKids')
  const childCount=count=>setForm({...form,children:Array.from({length:Number(count)},(_,i)=>children[i]||{})})
@@ -19,11 +19,11 @@ export function EnquiryWizard({form,setForm,save,close}){
   </div></div>)}</section>
   <section className="wizard-panel"><h3>Enquiry details</h3><div className="form-grid">
    <label>Contact channel<select value={form.source} onChange={event=>setForm({...form,source:event.target.value})}>{SOURCES.filter(item=>item!=='Direct Walk-in').map(item=><option key={item}>{item}</option>)}</select></label>
-   <fieldset className="heard-field span-two"><legend>How did you hear about our school?</legend><div className="checkbox-options">{HEARD_SOURCES.map(item=><label className="checkline" key={item}><input type="checkbox" checked={(form.heard||[]).includes(item)} onChange={event=>setForm({...form,heard:event.target.checked?[...(form.heard||[]),item]:(form.heard||[]).filter(value=>value!==item)})}/>{item}</label>)}</div></fieldset>
+   <fieldset className="heard-field span-two"><legend>How did you hear about our school?</legend><div className="checkbox-options">{heardSources.map(item=><label className="checkline" key={item}><input type="checkbox" checked={(form.heard||[]).includes(item)} onChange={event=>setForm({...form,heard:event.target.checked?[...(form.heard||[]),item]:(form.heard||[]).filter(value=>value!==item)})}/>{item}</label>)}</div></fieldset>
   </div></section>
   <div className="modal-actions"><button type="button" className="button secondary" onClick={close}>Cancel</button><button className="button primary">Save enquiry</button></div>
  </form>
-}export function WalkinWizard({form,setForm,save,close}){
+}export function WalkinWizard({form,setForm,save,close,heardSources=HEARD_SOURCES,referrerSource='Referred by Parent / Staff'}){
  const [step,setStep]=useState(0),[error,setError]=useState(''),children=form.children
  const childCount=count=>setForm({...form,children:Array.from({length:Number(count)},(_,i)=>children[i]||{})})
  const patch=(index,key,value)=>setForm({...form,children:children.map((child,i)=>i===index?{...child,[key]:value}:child)})
@@ -50,7 +50,7 @@ export function EnquiryWizard({form,setForm,save,close}){
    <label>Mobile number<input required value={form.mobile1} onChange={event=>setForm({...form,mobile1:event.target.value})}/></label>
    <label>Alternative mobile number<input value={form.mobile2} onChange={event=>setForm({...form,mobile2:event.target.value})}/></label>
    <label className="span-two">Reason for choosing this school<textarea value={form.reasonForChoosing||''} onChange={event=>setForm({...form,reasonForChoosing:event.target.value})}/></label>
-  </div><h3>How did you hear about our school?</h3><p>Select all that apply.</p><div className="checkbox-options">{['Word of Mouth','Social Media','Banners / Flex','Referred by Parent / Staff'].map(item=><label className="checkline" key={item}><input type="checkbox" checked={form.heard.includes(item)} onChange={event=>setForm({...form,heard:event.target.checked?[...form.heard,item]:form.heard.filter(value=>value!==item)})}/>{item}</label>)}</div>{form.heard.includes('Referred by Parent / Staff')&&<label className="narrow-field">Referring person name<input required value={form.referrer} onChange={event=>setForm({...form,referrer:event.target.value})}/></label>}</section>}
+  </div><h3>How did you hear about our school?</h3><p>Select all that apply.</p><div className="checkbox-options">{heardSources.map(item=><label className="checkline" key={item}><input type="checkbox" checked={form.heard.includes(item)} onChange={event=>setForm({...form,heard:event.target.checked?[...form.heard,item]:form.heard.filter(value=>value!==item)})}/>{item}</label>)}</div>{form.heard.includes(referrerSource)&&<label className="narrow-field">Referring person name<input required value={form.referrer} onChange={event=>setForm({...form,referrer:event.target.value})}/></label>}</section>}
   <div className="wizard-actions"><button type="button" className="button secondary" onClick={step?()=>setStep(0):close}>{step?'Back':'Cancel'}</button>{step===0?<button type="button" className="button primary" onClick={next}>Continue</button>:<button type="button" className="button primary" onClick={()=>save({preventDefault(){}})}>Submit walk-in form</button>}</div>
  </div>
 }

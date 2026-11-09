@@ -35,6 +35,8 @@ const groupRows=[
  ['capacity','27-28 Target / Capacity','plain','target-strength'],
  ['admissionsNeeded','Admissions Needed','plain','positive'],
  ['admissionsYet','Admissions Yet to Get','plain','mild-positive'],
+ ['expectedIncrease','Expected Increase','plain','expected-increase'],
+ ['realIncrease','Real Increase','plain','mild-positive'],
 ]
 const groupMetricColumns=[
  ['currentStrength','26-27 Actual Strength','plain','year-strength'],
@@ -45,6 +47,8 @@ const groupMetricColumns=[
  ['admissionsGot','Admissions Got','plus','positive'],
  ['strength2728','Live Strength','plain','year-strength'],
  ['admissionsYet','Admissions Yet to Get','plain','mild-positive'],
+ ['expectedIncrease','Expected Increase','plain','expected-increase'],
+ ['realIncrease','Real Increase','plain','mild-positive'],
 ]
 const groupClassMetricColumns=[
  ['currentStrength','26-27 Actual Strength','plain','class-strength'],
@@ -56,15 +60,19 @@ const groupClassMetricColumns=[
  ['admissionsGot','Admissions Got','plus','positive'],
  ['strength2728','Live Strength','plain','class-live-strength'],
  ['admissionsYet','Admissions Yet to Get','plain','class-positive'],
+ ['expectedIncrease','Expected Increase','plain','expected-increase'],
+ ['realIncrease','Real Increase','plain','class-positive'],
 ]
-const signed=(values,key,sign)=>sign==='minus'?minus(values[key]):sign==='plus'?(Number(values[key]||0)===0?'0':`+${money(values[key])}`):money(values[key])
+const metricValue=(values,key)=>key==='expectedIncrease'?Number(values.capacity||0)-Number(values.opening||0):key==='realIncrease'?Number(values.strength2728||0)-Number(values.currentStrength||0):Number(values[key]||0)
+const signed=(values,key,sign)=>sign==='minus'?minus(metricValue(values,key)):sign==='plus'?(metricValue(values,key)===0?'0':`+${money(metricValue(values,key))}`):money(metricValue(values,key))
 
 export function CapacityScreen({data,update}){
- const [scope,setScope]=useState('ALL')
+ const [scope,setScope]=useState('GROUPS')
  const [groupId,setGroupId]=useState('')
  const [selected,setSelected]=useState(null)
+ const [showFull,setShowFull]=useState(false)
  const matrixWrap=useRef(null)
- useEffect(()=>{if(matrixWrap.current)matrixWrap.current.scrollLeft=0},[scope])
+ useEffect(()=>{if(matrixWrap.current)matrixWrap.current.scrollLeft=0;setShowFull(false)},[scope])
  const boardTotals=Object.fromEntries(boards.map(name=>[name,boardCapacity(data,name)]))
  const groupTotals=CAPACITY_GROUPS.map(group=>({...groupCapacity(data,group.id),group}))
  const groupGrandTotal=groupScopeTotals(data)
@@ -83,6 +91,7 @@ export function CapacityScreen({data,update}){
  function chooseScope(id){setScope(id);setGroupId(scopes.find(item=>item.id===id)?.type==='group'?id:'')}
  function setValue(targetGroup,grade,key,value){update(d=>{d.capacityPlan ||= {};d.capacityPlan[targetGroup] ||= {};const before=d.capacityPlan[targetGroup][grade]||{};d.capacityPlan[targetGroup][grade]=normalizeCapacityRow({...before,[key]:Math.max(0,Math.floor(Number(value)||0))})})}
  const rowLabel=scope!=='ALL'&&scope!=='GROUPS'?groupMetricColumns:groupRows
+ const visibleRows=showFull?rowLabel:rowLabel.filter(([,label,,kind])=>['year-strength','positive','mild-positive','target-strength','expected-increase'].includes(kind))
  const tableColumns=selectedGroup?classColumns:columns
  return <>
   <div className="page-header capacity-page-header"><div><div className="eyebrow">SCHOOL CAPACITY - 25-26, 26-27 & 27-28</div><h1>Capacity Planning</h1><p>One table for every group, board total and class figure.</p></div></div>
@@ -102,10 +111,10 @@ export function CapacityScreen({data,update}){
       <div className="capacity-mobile-class-metrics">{groupClassMetricColumns.map(([key,label,sign,kind])=><div className={`capacity-mobile-metric ${kind}`} key={key}><span>{label}</span><strong>{signed(row,key,sign)}</strong></div>)}</div>
      </article>)}
     </div>
-   </>:<table className="capacity-matrix">
+   </>:<><table className="capacity-matrix">
     <thead><tr><th scope="col">Calculation</th>{tableColumns.map(column=><th scope="col" className={column.kind} key={column.key}>{column.label}</th>)}</tr></thead>
-    <tbody>{rowLabel.map(([key,label,sign,kind])=><tr key={key} className={kind}><th scope="row">{label}</th>{tableColumns.map(column=><td className={column.kind} key={column.key}>{signed(column.values,key,sign)}</td>)}</tr>)}</tbody>
-   </table>}
+    <tbody>{visibleRows.map(([key,label,sign,kind])=><tr key={key} className={kind}><th scope="row">{label}</th>{tableColumns.map(column=><td className={column.kind} key={column.key}>{signed(column.values,key,sign)}</td>)}</tr>)}</tbody>
+   </table>{(scope==='ALL'||scope==='GROUPS')&&<button type="button" className="capacity-show-full" onClick={()=>setShowFull(value=>!value)}>{showFull?'Show Less ↑':'Show Full Table ↓'}</button>}</>}
   </div>
   {selected&&<div className="modal-backdrop" onMouseDown={event=>event.target===event.currentTarget&&setSelected(null)}><div className="modal wide capacity-detail-modal"><div className="modal-head"><div><h2>{selected.grade} - {selected.group.name}</h2><p>Edit class figures.</p></div><button className="close-button" aria-label="Close edit dialog" onClick={()=>setSelected(null)}><X size={16}/></button></div>{(()=>{const row=capacityRows(data,selected.group.id).find(item=>item.name===selected.grade)||{};const fields=[['priorStrength','25-26 Strength'],['priorLeft','25-26 Left'],['joined','26-27 Joined'],['currentStrength','26-27 Strength'],['promotedOut','26-27 Promoted Out'],['promotedIn','26-27 Promoted In'],['opening','27-28 Opening'],['expectedLeave','27-28 Expected to Leave'],['capacity','27-28 Capacity'],['rooms','27-28 Sections']];return <div className="capacity-detail-body"><div className="capacity-edit-grid">{fields.filter(([key])=>editable.includes(key)).map(([key,label])=><label key={key}>{label}<input type="number" min="0" step="1" value={row[key]??0} onChange={event=>setValue(selected.group.id,selected.grade,key,event.target.value)}/></label>)}</div></div>})()}<div className="modal-actions capacity-detail-actions"><button className="button primary" onClick={()=>setSelected(null)}>Done</button></div></div></div>}
  </>

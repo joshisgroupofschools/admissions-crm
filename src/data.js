@@ -29,4 +29,4 @@ export function formalitiesStage(student){return isAdmissionStage(student.stage)
 export function localDateISO(date=new Date()){const y=date.getFullYear(),m=String(date.getMonth()+1).padStart(2,'0'),d=String(date.getDate()).padStart(2,'0');return`${y}-${m}-${d}`}
 export function todayISO(){return localDateISO()}
 
-export function makeInitialData(){return{families:[],students:[],walkIns:[],walkInMappings:[],followUps:[],admissions:[],retention:[],retentionHistory:[],promotionHistory:[],capacityPlan:makeCapacityData(),capacityRemarks:{},settings:{year:'2027-28',targets:{},seats:{},capacities:{},rooms:{},documents:['Birth certificate','Previous school record','Photographs','Aadhaar copy']}}}
+export function makeInitialData(){return{families:[],students:[],walkIns:[],walkInMappings:[],followUps:[],admissions:[],retention:[],retentionHistory:[],promotionHistory:[],capacityPlan:makeCapacityData(),capacityRemarks:{},settings:{year:'2027-28',targets:{},seats:{},capacities:{},rooms:{},heardSources:[...HEARD_SOURCES],documents:['Birth certificate','Previous school record','Photographs','Aadhaar copy']}}}

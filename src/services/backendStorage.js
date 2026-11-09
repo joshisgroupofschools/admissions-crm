@@ -239,5 +239,5 @@ async function syncSnapshot(nextData){
       versions.delete(`${table}|${record.id}`);remoteRows.delete(`${table}|${record.id}`)
     }
   }
-  backendContext.baseline=snapshot
+  backendContext.baseline=nextData
 }

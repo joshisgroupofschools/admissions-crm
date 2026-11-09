@@ -257,3 +257,74 @@
 .backend-gate-error ul{margin:7px 0 0;padding-left:18px}
 .backend-gate-progress{color:#5b6e81;font-size:13px}
 
+
+/* Full-screen entry forms and spreadsheet-style dashboard record views */
+.modal.full-screen{width:min(1500px,96vw);max-width:none;height:min(94dvh,1100px);max-height:94dvh;display:flex;flex-direction:column;overflow:hidden}
+.modal.full-screen>.modal-head{flex:none}
+.modal.full-screen>.form-body{flex:1;min-height:0;overflow:auto;padding:24px 30px 28px}
+.modal.full-screen .form-grid{gap:18px 20px}
+.modal.full-screen .form-grid label,.modal.full-screen .narrow-field{font-size:14px;gap:7px}
+.modal.full-screen .form-grid input,.modal.full-screen .form-grid select,.modal.full-screen .form-grid textarea,.modal.full-screen .narrow-field input,.modal.full-screen .narrow-field select{height:46px;font-size:15px;padding:0 12px}
+.modal.full-screen .form-grid textarea{height:100px;padding:10px}
+.modal.full-screen .wizard-panel{min-height:0;margin-bottom:24px}
+.modal.full-screen .wizard-panel h3{font-size:21px;margin-bottom:15px}
+.modal.full-screen .child-form{padding:18px;margin-top:14px}
+.modal.full-screen .child-form>strong{font-size:15px;margin-bottom:14px}
+.modal.full-screen .walkin-choice{min-height:44px;font-size:14px}
+.modal.full-screen .checkline{font-size:14px}
+.modal.full-screen .modal-actions,.modal.full-screen .wizard-actions{padding:16px 0 0}
+.records-overlay{position:fixed;inset:0;z-index:80;background:rgba(25,31,42,.44);padding:2vh 2vw;display:grid;place-items:center}
+.records-popup{width:96vw;max-width:1800px;height:96vh;background:#fffdfa;border:1px solid #e5d5bf;border-radius:12px;box-shadow:0 18px 60px rgba(30,34,42,.25);display:flex;flex-direction:column;overflow:hidden;color:#493a2b}
+.records-popup-head{min-height:66px;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:12px 20px;border-bottom:1px solid #e9dfd2;background:#fffaf2;flex:none}
+.records-popup-head h2{font:600 21px 'DM Sans',sans-serif;color:#7a2e2e;margin:0}
+.records-popup-head p{font-size:12px;color:#827363;margin:4px 0 0}
+.records-popup-close{width:38px;height:38px;display:grid;place-items:center;border:1px solid #e6d8c4;border-radius:8px;background:white;color:#654f3e;cursor:pointer}
+.records-filters{display:grid;grid-template-columns:minmax(210px,2fr) repeat(4,minmax(120px,1fr));gap:10px 12px;padding:13px 16px;border-bottom:1px solid #e9dfd2;background:#fffdfa;flex:none}
+.records-filters label{display:grid;gap:5px;min-width:0;font-size:11px;font-weight:600;color:#76634f}
+.records-filters input,.records-filters select{width:100%;height:36px;min-width:0;padding:0 9px;border:1px solid #ded3c4;border-radius:6px;background:white;color:#43382f;font:13px 'DM Sans',sans-serif}
+.records-filters .records-search{grid-column:span 2}
+.records-filters .records-sort{grid-column:span 2}
+.records-clear{align-self:end;height:36px;border:1px solid #e3d2bc;border-radius:6px;background:#fff8ed;color:#854020;font:600 12px 'DM Sans',sans-serif;cursor:pointer}
+.records-table-scroll{flex:1;min-height:0;overflow:auto;background:#fff}
+.records-excel-table{border-collapse:separate;border-spacing:0;width:100%;min-width:1180px;font:13px 'DM Sans',sans-serif}
+.records-excel-table th{position:sticky;top:0;z-index:2;background:#fff5e6;color:#71331f;text-align:left;font-size:12px;font-weight:700;white-space:nowrap;padding:12px 10px;border-bottom:1px solid #dfceb8}
+.records-excel-table td{padding:10px;border-bottom:1px solid #eee8df;color:#493a2b;vertical-align:top;line-height:1.35}
+.records-excel-table tbody tr{cursor:pointer;background:white}
+.records-excel-table tbody tr:nth-child(even){background:#fffdfa}
+.records-excel-table tbody tr:hover{background:#f2f7f1}
+.records-excel-table tbody tr:focus{outline:2px solid #9a4229;outline-offset:-2px}
+.records-excel-table .records-student-name{font-weight:700;color:#65362b;white-space:nowrap}
+.records-excel-table .records-remark{min-width:180px;max-width:320px;white-space:normal}
+.records-excel-table .records-empty{text-align:center;padding:35px;color:#827363}
+.records-popup-foot{padding:9px 16px;background:#fffaf2;border-top:1px solid #e9dfd2;color:#76634f;font-size:11px;flex:none}
+.records-popup-foot span{margin-left:8px}
+.heard-source-settings{display:grid;gap:8px;margin-top:12px;max-width:680px}
+.heard-source-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px}
+.heard-source-row input,.heard-source-add input{height:38px;min-width:0;padding:0 10px;border:1px solid #e8d9c0;border-radius:7px;background:#fffdfa;font:13px 'DM Sans',sans-serif}
+.heard-source-add{display:flex;gap:8px;margin-top:12px;max-width:680px}
+.heard-source-add input{flex:1}
+@media(max-width:760px){
+ .modal.full-screen{width:100vw;height:100dvh;max-height:100dvh;border-radius:0}
+ .modal.full-screen>.form-body{padding:15px 16px 24px}
+ .modal.full-screen .form-grid{grid-template-columns:1fr;gap:14px}
+ .modal.full-screen .span-two{grid-column:span 1}
+ .records-overlay{padding:0;place-items:stretch}
+ .records-popup{width:100vw;height:100dvh;max-width:none;border-radius:0;border:0}
+ .records-popup-head{padding:11px 14px;min-height:60px}
+ .records-popup-head h2{font-size:18px}
+ .records-filters{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;padding:10px}
+ .records-filters .records-search{grid-column:1/-1}
+ .records-filters .records-sort{grid-column:span 1}
+ .records-filters label{font-size:10px}
+ .records-filters input,.records-filters select,.records-clear{height:37px;font-size:12px}
+ .records-excel-table{min-width:1100px;font-size:12px}
+ .records-excel-table th{padding:10px 8px}
+ .records-excel-table td{padding:9px 8px}
+}
+
+/* Capacity summary display controls and increase rows */
+.capacity-matrix tbody tr.expected-increase th,.capacity-matrix tbody tr.expected-increase td{background:#e8f5e9;color:#277242;font-weight:700}
+.capacity-matrix.class-matrix tbody tr.expected-increase{background:#e8f5e9;color:#277242;font-weight:700}
+.capacity-matrix.class-matrix tbody tr.expected-increase th,.capacity-matrix.class-matrix tbody tr.expected-increase td{background:transparent;color:inherit;font-weight:inherit}
+.capacity-show-full{display:block;width:100%;min-height:40px;border:0;border-top:1px solid #e8d9c0;background:#fff8e9;color:#8a4325;font:600 13px 'DM Sans',sans-serif;cursor:pointer}
+.capacity-show-full:hover{background:#fff1dc}
