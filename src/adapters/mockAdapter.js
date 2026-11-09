@@ -5,7 +5,7 @@ const KEY='joshi-admissions-crm-v1'
 const normalizeYear=value=>String(value||'').replace(/[–—−]/g,'-').replace(/\s/g,'')
 const isRecord=value=>value!==null&&typeof value==='object'&&!Array.isArray(value)
 
-function normalize(saved={}){
+export function normalizeSavedData(saved={}){
   const defaults=makeInitialData()
   const data={...defaults,...saved}
   for(const key of ['families','students','walkIns','walkInMappings','followUps','admissions','retention','retentionHistory','promotionHistory'])data[key]=Array.isArray(data[key])?data[key].filter(isRecord):[]
@@ -59,7 +59,7 @@ function normalize(saved={}){
 
 export const mockAdapter={
   load(){
-    try{const value=localStorage.getItem(KEY);return normalize(value?JSON.parse(value):makeInitialData())}
+    try{const value=localStorage.getItem(KEY);return normalizeSavedData(value?JSON.parse(value):makeInitialData())}
     catch(error){try{const damaged=localStorage.getItem(KEY);if(damaged)localStorage.setItem(`${KEY}-recovery-${Date.now()}`,damaged)}catch{}console.error('Could not load saved admission data; starting with an empty workspace.',error);return makeInitialData()}
   },
   save(data){try{localStorage.setItem(KEY,JSON.stringify(data));return data}catch(error){console.error('Could not save admission data.',error);throw error}},

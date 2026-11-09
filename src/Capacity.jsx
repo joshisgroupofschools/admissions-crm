@@ -90,11 +90,19 @@ export function CapacityScreen({data,update}){
    <div className="capacity-board-tabs">{scopes.map(item=><button key={item.id} className={scope===item.id?'active':''} onClick={()=>chooseScope(item.id)}>{item.label}</button>)}</div>
    {selectedGroup&&<div><h2>{selectedGroup.name}</h2><p>Class figures for this group.</p></div>}
   </div>
-  <div className="capacity-matrix-wrap" ref={matrixWrap}>
-   {selectedGroup?<table className="capacity-matrix class-matrix">
-    <thead><tr><th scope="col">Calculation</th>{[...classValues.map(row=>({key:row.name,label:row.name,values:row})),{key:'total',label:`TOTAL ${selectedGroup.name}`,values:selectedSummary}].map(column=><th scope="col" key={column.key}>{column.key==='total'?column.label:<button type="button" className="capacity-class-header-button" title={`Edit ${column.label} figures`} aria-label={`Edit ${column.label} strength and capacity figures`} onClick={()=>setSelected({grade:column.label,group:selectedGroup})}>{column.label}</button>}</th>)}</tr></thead>
-    <tbody>{groupClassMetricColumns.map(([key,label,sign,kind])=><tr key={key} className={kind}><th scope="row">{label}</th>{[...classValues,{...selectedSummary,name:'total'}].map(row=><td key={row.name}>{signed(row,key,sign)}</td>)}</tr>)}</tbody>
-   </table>:<table className="capacity-matrix">
+  <div className={`capacity-matrix-wrap ${selectedGroup?'capacity-matrix-group-wrap':''}`} ref={matrixWrap}>
+   {selectedGroup?<>
+    <table className="capacity-matrix class-matrix">
+     <thead><tr><th scope="col">Calculation</th>{[...classValues.map(row=>({key:row.name,label:row.name,values:row})),{key:'total',label:`TOTAL ${selectedGroup.name}`,values:selectedSummary}].map(column=><th scope="col" key={column.key}>{column.key==='total'?column.label:<button type="button" className="capacity-class-header-button" title={`Edit ${column.label} figures`} aria-label={`Edit ${column.label} strength and capacity figures`} onClick={()=>setSelected({grade:column.label,group:selectedGroup})}>{column.label}</button>}</th>)}</tr></thead>
+     <tbody>{groupClassMetricColumns.map(([key,label,sign,kind])=><tr key={key} className={kind}><th scope="row">{label}</th>{[...classValues,{...selectedSummary,name:'total'}].map(row=><td key={row.name}>{signed(row,key,sign)}</td>)}</tr>)}</tbody>
+    </table>
+    <div className="capacity-mobile-class-list">
+     {[...classValues,{...selectedSummary,name:`TOTAL ${selectedGroup.name}`,isTotal:true}].map(row=><article className="capacity-mobile-class-card" key={row.name}>
+      {row.isTotal?<h3>{row.name}</h3>:<button type="button" className="capacity-mobile-class-title" onClick={()=>setSelected({grade:row.name,group:selectedGroup})}>{row.name}<span>Edit</span></button>}
+      <div className="capacity-mobile-class-metrics">{groupClassMetricColumns.map(([key,label,sign,kind])=><div className={`capacity-mobile-metric ${kind}`} key={key}><span>{label}</span><strong>{signed(row,key,sign)}</strong></div>)}</div>
+     </article>)}
+    </div>
+   </>:<table className="capacity-matrix">
     <thead><tr><th scope="col">Calculation</th>{tableColumns.map(column=><th scope="col" className={column.kind} key={column.key}>{column.label}</th>)}</tr></thead>
     <tbody>{rowLabel.map(([key,label,sign,kind])=><tr key={key} className={kind}><th scope="row">{label}</th>{tableColumns.map(column=><td className={column.kind} key={column.key}>{signed(column.values,key,sign)}</td>)}</tr>)}</tbody>
    </table>}
