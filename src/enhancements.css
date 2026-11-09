@@ -286,10 +286,11 @@
 .records-filters .records-search{grid-column:span 2}
 .records-filters .records-sort{grid-column:span 2}
 .records-clear{align-self:end;height:36px;border:1px solid #e3d2bc;border-radius:6px;background:#fff8ed;color:#854020;font:600 12px 'DM Sans',sans-serif;cursor:pointer}
-.records-table-scroll{flex:1;min-height:0;overflow:auto;background:#fff}
+.records-table-scroll{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;background:#fff}
 .records-excel-table{border-collapse:collapse;table-layout:fixed;width:100%;min-width:0;font:13px 'DM Sans',sans-serif}
-.records-excel-table th{position:sticky;top:0;z-index:2;background:#fff5e6;color:#71331f;text-align:left;font-size:12px;font-weight:700;white-space:nowrap;padding:12px 10px;border-bottom:1px solid #dfceb8}
-.records-excel-table td{padding:10px;border-bottom:1px solid #eee8df;color:#493a2b;vertical-align:top;line-height:1.35}
+.records-excel-table th{position:sticky;top:0;z-index:2;background:#fff5e6;color:#71331f;text-align:left;font-size:12px;font-weight:700;white-space:normal;overflow-wrap:anywhere;padding:12px 8px;border-bottom:1px solid #dfceb8}
+.records-excel-table th:nth-child(1){width:4%}.records-excel-table th:nth-child(2){width:8%}.records-excel-table th:nth-child(3){width:12%}.records-excel-table th:nth-child(4){width:6%}.records-excel-table th:nth-child(5){width:7%}.records-excel-table th:nth-child(6){width:12%}.records-excel-table th:nth-child(7){width:10%}.records-excel-table th:nth-child(8){width:8%}.records-excel-table th:nth-child(9){width:11%}.records-excel-table th:nth-child(10){width:13%}.records-excel-table th:nth-child(11){width:9%}
+.records-excel-table td{min-width:0;padding:9px 8px;border-bottom:1px solid #eee8df;color:#493a2b;vertical-align:top;line-height:1.35;overflow-wrap:anywhere;word-break:normal}
 .records-excel-table tbody tr{cursor:pointer;background:white}
 .records-excel-table tbody tr:nth-child(even){background:#fffdfa}
 .records-excel-table tbody tr:hover{background:#f2f7f1}
