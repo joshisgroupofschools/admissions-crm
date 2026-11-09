@@ -73,9 +73,9 @@ export function RecordTablePopup({title,records=[],families=[],kind='students',s
     <label className="records-sort">Sort By<select value={sort} onChange={event=>setSort(event.target.value)}>{SORTS.map(item=><option value={item} key={item}>{item}</option>)}</select></label>
     <button type="button" className="records-clear" onClick={clear}>Clear filters</button>
    </div>
-   <div className="records-table-scroll"><table className="records-excel-table"><thead><tr><th>S.No</th><th>Date of Enquiry</th><th>Student Name</th><th>Class</th><th>Board</th><th>Referred By</th><th>Previous School</th><th>Phone Number</th><th>Stage of Enquiry</th><th>Remark</th></tr></thead><tbody>
-    {rows.map((row,index)=><tr key={row.id} tabIndex={0} onClick={()=>openRow(row)} onKeyDown={event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();openRow(row)}}}><td>{index+1}</td><td>{fmtDate(row.created)}</td><td className="records-student-name">{row.studentName}</td><td>{classLabel(row.grade)||'—'}</td><td>{row.board||'—'}</td><td>{row.referral||'—'}</td><td>{row.previousSchool||'—'}</td><td>{row.phone||'—'}</td><td>{row.stage}</td><td className="records-remark">{row.remark||'—'}</td></tr>)}
-    {!rows.length&&<tr><td colSpan="10" className="records-empty">No matching records.</td></tr>}
+   <div className="records-table-scroll"><table className="records-excel-table"><thead><tr><th>S.No</th><th>Date of Enquiry</th><th>Student Name</th><th>Class</th><th>Board</th><th>Referred By</th><th>Previous School</th><th>Phone Number</th><th>Stage of Enquiry</th><th>Remark</th><th>Next Follow-up Date</th></tr></thead><tbody>
+    {rows.map((row,index)=><tr key={row.id} tabIndex={0} onClick={()=>openRow(row)} onKeyDown={event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();openRow(row)}}}><td>{index+1}</td><td>{fmtDate(row.created)}</td><td className="records-student-name">{row.studentName}</td><td>{classLabel(row.grade)||'—'}</td><td>{row.board||'—'}</td><td>{row.referral||'—'}</td><td>{row.previousSchool||'—'}</td><td>{row.phone||'—'}</td><td>{row.stage}</td><td className="records-remark">{row.remark||'—'}</td><td>{fmtDate(row.followUp)}</td></tr>)}
+    {!rows.length&&<tr><td colSpan="11" className="records-empty">No matching records.</td></tr>}
    </tbody></table></div>
    <footer className="records-popup-foot">Showing {rows.length} records <span>· Click a row to open it</span></footer>
   </section>

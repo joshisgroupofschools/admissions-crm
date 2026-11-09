@@ -328,3 +328,22 @@
 .capacity-matrix.class-matrix tbody tr.expected-increase th,.capacity-matrix.class-matrix tbody tr.expected-increase td{background:transparent;color:inherit;font-weight:inherit}
 .capacity-show-full{display:block;width:100%;min-height:40px;border:0;border-top:1px solid #e8d9c0;background:#fff8e9;color:#8a4325;font:600 13px 'DM Sans',sans-serif;cursor:pointer}
 .capacity-show-full:hover{background:#fff1dc}
+
+/* Record views occupy the complete screen like a workbook page. */
+.records-overlay{padding:0;place-items:stretch;background:rgba(25,31,42,.38)}
+.records-popup{width:100vw;height:100vh;height:100dvh;max-width:none;border:0;border-radius:0;box-shadow:none}
+.records-excel-table{min-width:1320px}
+@media(max-width:760px){.records-popup{width:100vw;height:100vh;height:100dvh}.records-excel-table{min-width:1280px}}
+@media(max-width:700px){
+ .capacity-matrix-summary-wrap{overflow:visible;border:0;border-radius:0;background:transparent;box-shadow:none}
+ .capacity-matrix-summary-wrap>.capacity-matrix{display:none}
+ .capacity-mobile-summary-list{display:grid;gap:9px;margin-bottom:10px}
+ .capacity-mobile-summary-list .capacity-mobile-class-card h3{font-size:15px}
+ .capacity-mobile-summary-list .capacity-mobile-metric{min-height:44px}
+ .capacity-mobile-summary-list .capacity-mobile-metric.year-strength,.capacity-mobile-summary-list .capacity-mobile-metric.target-strength,.capacity-mobile-summary-list .capacity-mobile-metric.expected-increase{background:#dff1e4}
+ .capacity-mobile-summary-list .capacity-mobile-metric.year-strength strong,.capacity-mobile-summary-list .capacity-mobile-metric.target-strength strong,.capacity-mobile-summary-list .capacity-mobile-metric.expected-increase strong{color:#08743b;font-weight:800}
+ .capacity-mobile-summary-list .capacity-mobile-metric.mild-positive,.capacity-mobile-summary-list .capacity-mobile-metric.positive{background:#eff7ef}
+ .capacity-mobile-summary-list .capacity-mobile-metric.mild-positive strong,.capacity-mobile-summary-list .capacity-mobile-metric.positive strong{color:#247240}
+ .capacity-mobile-summary-list .capacity-mobile-metric.negative{background:#fff1ed}
+ .capacity-mobile-summary-list .capacity-mobile-metric.negative strong{color:#bd4438}
+}

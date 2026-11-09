@@ -31,7 +31,7 @@ function exportLocalBackup(snapshot){
 export default function App(){
  const [data,setData]=useState(getInitial),[page,setPage]=useState('Dashboard'),[search,setSearch]=useState(''),[stage,setStageFilter]=useState(''),[source,setSourceFilter]=useState(''),[filters,setFilters]=useState({from:'',to:'',board:'',grade:'',group:''}),[notice,setNotice]=useState(''),[modal,setModal]=useState(''),[detail,setDetail]=useState(null),[edit,setEdit]=useState(null),[walk,setWalk]=useState(null),[draft,setDraft]=useState({}),[form,setForm]=useState({parent:'',mobile:'',source:'Call',heard:[],followUp:'',remarks:'',children:[{}]}),[walkinForm,setWalkinForm]=useState({children:[{}],fatherName:'',occupation:'',mobile1:'',mobile2:'',reasonForChoosing:'',heard:[],referrer:''}),[walkDraft,setWalkDraft]=useState({}),[match,setMatch]=useState({}),[stageDraft,setStageDraft]=useState(null)
  const [followModal,setFollowModal]=useState(null),[followDraft,setFollowDraft]=useState({remarks:'',nextFollowUp:''}),[saveFailed,setSaveFailed]=useState(false)
- const [mobileNav,setMobileNav]=useState(false),[authToken,setAuthToken]=useState(''),[backendReady,setBackendReady]=useState(false),[authBusy,setAuthBusy]=useState(false),[authError,setAuthError]=useState(null),[migrationProgress,setMigrationProgress]=useState(null)
+ const [mobileNav,setMobileNav]=useState(false),[authToken,setAuthToken]=useState(()=>sessionStorage.getItem('admissions-crm-session')||''),[backendReady,setBackendReady]=useState(false),[authBusy,setAuthBusy]=useState(false),[authError,setAuthError]=useState(null),[migrationProgress,setMigrationProgress]=useState(null)
  async function connectBackend(token){
   setAuthBusy(true);setAuthError(null)
   try{
@@ -43,15 +43,15 @@ export default function App(){
    }
    dataService.activateBackend(token,loaded);setData(loaded.data);setBackendReady(true);setMigrationProgress(null)
   }catch(error){
-   dataService.clearBackend();setAuthToken('');setBackendReady(false);setAuthError(error);setMigrationProgress(null)
+   dataService.clearBackend();sessionStorage.removeItem('admissions-crm-session');setAuthToken('');setBackendReady(false);setAuthError(error);setMigrationProgress(null)
   }finally{setAuthBusy(false)}
  }
  async function submitSharedCode(code){
   setAuthBusy(true);setAuthError(null)
-  try{const session=await backendApi.login(code);setAuthToken(session.token)}
+  try{const session=await backendApi.login(code);sessionStorage.setItem('admissions-crm-session',session.token);setAuthToken(session.token)}
   catch(error){setAuthError(error);setAuthBusy(false)}
  }
- async function signOut(){try{if(authToken)await backendApi.logout(authToken)}catch{}dataService.clearBackend();setAuthToken('');setBackendReady(false);setAuthError(null)}
+ async function signOut(){try{if(authToken)await backendApi.logout(authToken)}catch{}dataService.clearBackend();sessionStorage.removeItem('admissions-crm-session');setAuthToken('');setBackendReady(false);setAuthError(null)}
  useEffect(()=>{if(authToken&&!backendReady)connectBackend(authToken)},[authToken,backendReady]);
  useEffect(()=>{if(!backendReady)return;let live=true;dataService.save(data).then(()=>{if(live)setSaveFailed(false)}).catch(error=>{if(live){setSaveFailed(true);setNotice(error.message||'Could not save to the shared database. Refresh and try again.')}});return()=>{live=false}},[data,backendReady]);
  useEffect(()=>{if(!notice)return;const t=setTimeout(()=>setNotice(''),5000);return()=>clearTimeout(t)},[notice]);
