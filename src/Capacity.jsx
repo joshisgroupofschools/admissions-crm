@@ -63,7 +63,7 @@ const groupClassMetricColumns=[
  ['expectedIncrease','Expected Increase','plain','expected-increase'],
  ['realIncrease','Real Increase','plain','class-positive'],
 ]
-const metricValue=(values,key)=>key==='expectedIncrease'?Number(values.capacity||0)-Number(values.opening||0):key==='realIncrease'?Number(values.strength2728||0)-Number(values.currentStrength||0):Number(values[key]||0)
+const metricValue=(values,key)=>key==='expectedIncrease'?Number(values.capacity||0)-Number(values.currentStrength||0):key==='realIncrease'?Number(values.strength2728||0)-Number(values.currentStrength||0):Number(values[key]||0)
 const signed=(values,key,sign)=>sign==='minus'?minus(metricValue(values,key)):sign==='plus'?(metricValue(values,key)===0?'0':`+${money(metricValue(values,key))}`):money(metricValue(values,key))
 
 export function CapacityScreen({data,update}){
