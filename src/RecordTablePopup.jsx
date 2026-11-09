@@ -8,8 +8,14 @@ const SORTS=['Latest Enquiry First','Oldest Enquiry First',FOLLOW_SORT,'Latest F
 const stageName=record=>{
  if(record.stage==='New Lead')return 'Not Contacted Yet'
  if(record.stage==='Positive')return 'Spoke on Call'
+ if(record.stage==='Contacted - Seems Positive')return 'Contacted – Seems Positive'
+ if(record.stage==='Contacted - Seems Negative')return 'Contacted – Seems Negative'
+ if(record.stage==='Contacted - Undecided')return 'Contacted – Undecided'
+ if(record.stage==='Contacted - Not Answering')return 'Contacted – Not Answering'
+ if(record.stage==='Not Contacted')return 'Not Contacted'
  if(record.stage==='Not Answering')return 'Not Answering'
- if(String(record.stage||'').startsWith('Walk-in'))return 'Walk-in'
+ if(record.stage==='Lost'&&record.walkInOutcome)return `Walk-in – ${record.walkInOutcome}`
+ if(String(record.stage||'').startsWith('Walk-in'))return `Walk-in – ${record.walkInOutcome||record.stage.replace('Walk-in ','')}`
  if(isAdmissionStage(record.stage))return 'Taken Admission'
  if(record.stage==='Lost')return 'Lost Admission'
  return record.stage||'Pending'
@@ -74,7 +80,7 @@ export function RecordTablePopup({title,records=[],families=[],kind='students',s
     <button type="button" className="records-clear" onClick={clear}>Clear filters</button>
    </div>
    <div className="records-table-scroll"><table className="records-excel-table"><thead><tr><th>S.No</th><th>Date of Enquiry</th><th>Student Name</th><th>Class</th><th>Board</th><th>Referred By</th><th>Previous School</th><th>Phone Number</th><th>Stage of Enquiry</th><th>Remark</th><th>Next Follow-up Date</th></tr></thead><tbody>
-    {rows.map((row,index)=><tr key={row.id} tabIndex={0} onClick={()=>openRow(row)} onKeyDown={event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();openRow(row)}}}><td>{index+1}</td><td>{fmtDate(row.created)}</td><td className="records-student-name">{row.studentName}</td><td>{classLabel(row.grade)||'—'}</td><td>{row.board||'—'}</td><td>{row.referral||'—'}</td><td>{row.previousSchool||'—'}</td><td>{row.phone||'—'}</td><td>{row.stage}</td><td className="records-remark">{row.remark||'—'}</td><td>{fmtDate(row.followUp)}</td></tr>)}
+    {rows.map((row,index)=><tr key={row.id} tabIndex={0} onClick={()=>openRow(row)} onKeyDown={event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();openRow(row)}}}><td data-label="S.No">{index+1}</td><td data-label="Date of Enquiry">{fmtDate(row.created)}</td><td data-label="Student Name" className="records-student-name">{row.studentName}</td><td data-label="Class">{classLabel(row.grade)||'—'}</td><td data-label="Board">{row.board||'—'}</td><td data-label="Referred By">{row.referral||'—'}</td><td data-label="Previous School">{row.previousSchool||'—'}</td><td data-label="Phone Number">{row.phone||'—'}</td><td data-label="Stage of Enquiry">{row.stage}</td><td data-label="Remark" className="records-remark">{row.remark||'—'}</td><td data-label="Next Follow-up Date">{fmtDate(row.followUp)}</td></tr>)}
     {!rows.length&&<tr><td colSpan="11" className="records-empty">No matching records.</td></tr>}
    </tbody></table></div>
    <footer className="records-popup-foot">Showing {rows.length} records <span>· Click a row to open it</span></footer>

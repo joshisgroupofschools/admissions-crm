@@ -3,12 +3,14 @@ import {makeCapacityData} from './capacityData.js'
 export const GROUPS=['EUROKIDS','SSC KG','SSC 1-5','SSC 6-10','CBSE 1-5','CBSE 6-10']
 export const BOARDS=['SSC','CBSE','EuroKids','Not Yet Decided']
 export const CLASSES=['PG','Nursery','LKG','UKG','E.Jr','E.Sr',...Array.from({length:10},(_,i)=>`Grade ${i+1}`)]
-export const STAGES=['New Lead','Positive','Walk-in Positive','Walk-in Negative','Walk-in Pending','Admission Form Taken','Admission Form Returned','ERP & Fees Assigned','Documents Pending','All Done','Lost']
+export const CONTACT_STAGES=['Contacted - Seems Positive','Contacted - Seems Negative','Contacted - Undecided','Contacted - Not Answering','Not Contacted']
+export const WALK_IN_STAGES=['Walk-in Positive','Walk-in Pending','Walk-in Negative','Walk-in Fees Concern','Walk-in Other Issue']
+export const STAGES=['New Lead',...CONTACT_STAGES,'Positive','Walk-in Positive','Walk-in Negative','Walk-in Pending','Walk-in Fees Concern','Walk-in Other Issue','Admission Form Taken','Admission Form Returned','ERP & Fees Assigned','Documents Pending','All Done','Lost']
 export const ADMISSION_STAGES=['Admission Form Taken','Admission Form Returned','ERP & Fees Assigned','Documents Pending','All Done']
-export const WALK_IN_OUTCOMES=['Positive','Negative','Pending']
+export const WALK_IN_OUTCOMES=['Positive','Pending','Negative','Fees Concern','Other Issue']
 export const SOURCES=['Call','SMS','WhatsApp','Social Media','Other','Direct Walk-in']
 export const HEARD_SOURCES=['Word of Mouth','Social Media','Banners / Flex','Referred by Parent / Staff']
-export const LOSS_REASONS=['Fees Concern','Distance Concern','Not Answering / Unknown','Joined Other School','Relocated','Others']
+export const LOSS_REASONS=['Fees Concern','Distance Concern','Joined Other School','Relocated','Others']
 export const FORMALITY_STAGES=['Admission Form Taken','Admission Form Returned','ERP & Fees Assigned','Documents Pending','All Done']
 export const isAdmissionStage=stage=>ADMISSION_STAGES.includes(stage)
 

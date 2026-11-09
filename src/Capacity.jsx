@@ -35,8 +35,6 @@ const groupRows=[
  ['capacity','27-28 Target / Capacity','plain','target-strength'],
  ['admissionsNeeded','Admissions Needed','plain','positive'],
  ['admissionsYet','Admissions Yet to Get','plain','mild-positive'],
- ['expectedIncrease','Expected Increase','plain','expected-increase'],
- ['realIncrease','Real Increase','plain','mild-positive'],
 ]
 const groupMetricColumns=[
  ['currentStrength','26-27 Actual Strength','plain','year-strength'],
@@ -47,8 +45,6 @@ const groupMetricColumns=[
  ['admissionsGot','Admissions Got','plus','positive'],
  ['strength2728','Live Strength','plain','year-strength'],
  ['admissionsYet','Admissions Yet to Get','plain','mild-positive'],
- ['expectedIncrease','Expected Increase','plain','expected-increase'],
- ['realIncrease','Real Increase','plain','mild-positive'],
 ]
 const groupClassMetricColumns=[
  ['currentStrength','26-27 Actual Strength','plain','class-strength'],
@@ -60,10 +56,8 @@ const groupClassMetricColumns=[
  ['admissionsGot','Admissions Got','plus','positive'],
  ['strength2728','Live Strength','plain','class-live-strength'],
  ['admissionsYet','Admissions Yet to Get','plain','class-positive'],
- ['expectedIncrease','Expected Increase','plain','expected-increase'],
- ['realIncrease','Real Increase','plain','class-positive'],
 ]
-const metricValue=(values,key)=>key==='expectedIncrease'?Number(values.capacity||0)-Number(values.currentStrength||0):key==='realIncrease'?Number(values.strength2728||0)-Number(values.currentStrength||0):Number(values[key]||0)
+const metricValue=(values,key)=>Number(values[key]||0)
 const signed=(values,key,sign)=>sign==='minus'?minus(metricValue(values,key)):sign==='plus'?(metricValue(values,key)===0?'0':`+${money(metricValue(values,key))}`):money(metricValue(values,key))
 
 export function CapacityScreen({data,update}){
@@ -91,7 +85,7 @@ export function CapacityScreen({data,update}){
  function chooseScope(id){setScope(id);setGroupId(scopes.find(item=>item.id===id)?.type==='group'?id:'')}
  function setValue(targetGroup,grade,key,value){update(d=>{d.capacityPlan ||= {};d.capacityPlan[targetGroup] ||= {};const before=d.capacityPlan[targetGroup][grade]||{};d.capacityPlan[targetGroup][grade]=normalizeCapacityRow({...before,[key]:Math.max(0,Math.floor(Number(value)||0))})})}
  const rowLabel=scope!=='ALL'&&scope!=='GROUPS'?groupMetricColumns:groupRows
- const visibleRows=showFull?rowLabel:rowLabel.filter(([,label,,kind])=>['year-strength','positive','mild-positive','target-strength','expected-increase'].includes(kind))
+const visibleRows=showFull?rowLabel:rowLabel.filter(([,label,,kind])=>['year-strength','positive','mild-positive','target-strength'].includes(kind))
  const tableColumns=selectedGroup?classColumns:columns
  return <>
   <div className="page-header capacity-page-header"><div><div className="eyebrow">SCHOOL CAPACITY - 25-26, 26-27 & 27-28</div><h1>Capacity Planning</h1><p>One table for every group, board total and class figure.</p></div></div>
