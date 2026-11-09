@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Apps Script connection proof</title>
+  <style>body{color:#233044;max-width:760px;margin:36px auto;padding:0 18px;font:16px system-ui,sans-serif}input,button{font:inherit;border:1px solid #ccd4df;border-radius:6px;margin:4px;padding:9px 12px}button{cursor:pointer;background:#f4f7fb}pre{background:#f4f6f8;min-height:120px;padding:14px;overflow:auto}</style>
+  <script type="module" crossorigin src="../assets/backendProof-DnG0aMxD.js"></script>
+  <link rel="modulepreload" crossorigin href="../assets/modulepreload-polyfill-P2Xu9kJm.js">
+</head>
+<body>
+  <h1>Apps Script &rarr; private Sheet proof</h1>
+  <p>This isolated page checks browser GET, POST, server errors and concurrent writes. It does not touch CRM data.</p>
+  <label>Deployed Apps Script <code>/exec</code> URL <input id="url" size="46" placeholder="https://script.google.com/macros/s/.../exec"></label>
+  <p><button data-test="read">GET / read</button><button data-test="write">POST / write</button><button data-test="error">Error response</button><button data-test="concurrent">Two concurrent POSTs</button></p>
+  <pre id="output">Configure and deploy the isolated Apps Script proof, then enter its URL.</pre>
+</body>
+</html>

@@ -1,0 +1,25 @@
+# Dependencies and generated builds
+node_modules/
+dist/
+coverage/
+.vite/
+
+# Local environment and credentials
+.env
+.env.*
+!.env.example
+*.pem
+credentials*.json
+service-account*.json
+
+# Local/editor/system files
+*.log
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Local preview and internal planning documents
+walkin-preview.png
+BACKEND_HANDOFF_PROMPT.md
+CODE_REVIEW_CHECKLIST.md
