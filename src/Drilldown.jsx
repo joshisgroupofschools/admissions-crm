@@ -1,0 +1,26 @@
+import {useState} from 'react'
+import {ArrowLeft,ChevronRight,X} from 'lucide-react'
+import {normalizeBoard,normalizeGroupName} from './data'
+import {CAPACITY_GROUPS,capacityRows} from './capacityData'
+
+const boards=[['SSC','SSC'],['EUROKIDS','EuroKids'],['CBSE','CBSE'],['Not Yet Decided','Not yet decided']]
+const groupBoard={'ssc-kg':'SSC','ssc-1-5':'SSC','ssc-6-10':'SSC',eurokids:'EuroKids','cbse-1-5':'CBSE','cbse-6-10':'CBSE'}
+function boardFor(s){return normalizeBoard(s.board)}
+function groupRows(records,group){return records.filter(s=>s.groups?.some(name=>normalizeGroupName(name)===normalizeGroupName(group.name))&&groupBoard[group.id]===boardFor(s))}
+function classRows(records,group,grade){return groupRows(records,group).filter(s=>{const m=grade.match(/^(?:SSC|CBSE) (\d+)$/);if(m)return s.grade===`Grade ${m[1]}`;if(group.id==='eurokids'&&grade==='E.Jr')return ['E.Jr','LKG'].includes(s.grade);if(group.id==='eurokids'&&grade==='E.Sr')return ['E.Sr','UKG'].includes(s.grade);if(group.id==='ssc-kg'&&grade==='LKG')return ['LKG','E.Jr'].includes(s.grade);if(group.id==='ssc-kg'&&grade==='UKG')return ['UKG','E.Sr'].includes(s.grade);return s.grade===grade})}
+
+export function Drilldown({data,title,records,onClose,onOpenRecords,start='groups',categories=[]}){
+ const [level,setLevel]=useState(categories.length?'categories':start),[board,setBoard]=useState(''),[groupId,setGroupId]=useState(''),[scope,setScope]=useState(records),[scopeTitle,setScopeTitle]=useState(title),[scopeUnit,setScopeUnit]=useState('student leads')
+ const group=CAPACITY_GROUPS.find(g=>g.id===groupId),groupChoices=CAPACITY_GROUPS.filter(g=>!board||groupBoard[g.id]===board),availableBoards=boards.map(([id,label])=>({id,label,rows:scope.filter(s=>boardFor(s)===normalizeBoard(label))})).filter(item=>item.rows.length>0)
+ const heading=level==='classes'?`${scopeTitle} · ${group?.name||''}`:level==='groups'&&board?`${scopeTitle} · ${board}`:scopeTitle
+ const validGroupRows=scope.flatMap(s=>groupChoices.flatMap(g=>groupRows([s],g).map(()=>s))),coveredIds=new Set(validGroupRows.map(s=>s.id)),needsReview=scope.filter(s=>!coveredIds.has(s.id))
+ const back=()=>{if(level==='categories')onClose();else if(level==='boards')setLevel(categories.length?'categories':'groups');else if(level==='groups'){setLevel(start==='boards'?'boards':categories.length?'categories':'groups');setBoard('')}else if(level==='classes'){setLevel('groups');setGroupId('')}}
+ const chooseCategory=item=>{setScope(item.records);setScopeTitle(item.title);setScopeUnit(item.nextUnit||'student leads');setLevel(start==='boards'?'boards':'groups');setBoard('')}
+ const chooseClass=grade=>onOpenRecords(`${scopeTitle} · ${group.name} · ${grade}`,classRows(scope,group,grade))
+ return <div className="modal-backdrop" onMouseDown={e=>e.target===e.currentTarget&&onClose()}><div className="modal wide drilldown-modal"><div className="modal-head"><div className="drilldown-title">{level!=='categories'&&<button className="capacity-back" onClick={back}><ArrowLeft size={15}/> Back</button>}<div><h2>{heading}</h2><p>{level==='categories'?'Choose a breakdown; these counts add up to the card total.':level==='boards'?'Choose a board to see its school groups.':level==='groups'?`Counts show ${scopeUnit}. Choose a school group.`:level==='classes'?'Choose a class to open matching student records.':'Open matching records.'}</p></div></div><button className="close-button" onClick={onClose}><X size={18}/></button></div><div className="drilldown-grid">
+ {level==='categories'&&categories.map(item=><button className="drilldown-card" key={item.title} onClick={()=>chooseCategory(item)}><span>{item.title}<ChevronRight size={16}/></span><strong>{item.count??item.records.length}</strong><small>{item.unitLabel||'Open this breakdown'}{item.count!=null&&item.records.length!==item.count?` · ${item.records.length} linked leads`:''}</small></button>)}
+ {level==='boards'&&availableBoards.map(item=><button className="drilldown-card" key={item.id} onClick={()=>{setBoard(item.id);setLevel('groups')}}><span>{item.label}<ChevronRight size={16}/></span><strong>{item.rows.length}</strong><small>{scopeUnit} · open groups</small></button>)}
+ {level==='groups'&&<>{groupChoices.map(item=>{const rows=groupRows(scope,item);return <button className="drilldown-card" key={item.id} onClick={()=>{setGroupId(item.id);setLevel('classes')}}><span>{item.name}<ChevronRight size={16}/></span><strong>{rows.length}</strong><small>{scopeUnit} · open classes</small></button>})}{needsReview.length>0&&<button className="drilldown-card review-card" onClick={()=>onOpenRecords(`${scopeTitle} · Needs board/class review`,needsReview)}><span>Needs board/class review<ChevronRight size={16}/></span><strong>{needsReview.length}</strong><small>Records without a matching school group</small></button>}</>}
+ {level==='classes'&&group&&capacityRows(data,group.id).map(row=>{const rows=classRows(scope,group,row.name);return <button className="drilldown-card" key={row.name} onClick={()=>chooseClass(row.name)}><span>{row.name}<ChevronRight size={16}/></span><strong>{rows.length}</strong><small>{rows.length===1?'matching record':'matching records'} · admissions {row.admissionsGot}/{row.admissionsNeeded} · capacity {row.capacity}</small></button>})}
+ </div></div></div>
+}
